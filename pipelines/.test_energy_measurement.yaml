@@ -18,7 +18,7 @@ test-build:
     - cp remote-eco-lab/scripts/test_scripts/org.kde.kate/* scripts/test_scripts/org.kde.kate/
   script:
   # Flatpak command for installing test application based on merge request title from flathub
-    - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab karan@$LABPC_IP "
+    - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab kecolab@$LABPC_IP "
       flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo &&
       flatpak install --user $PACKAGE_NAME -y "
   rules:
@@ -33,13 +33,13 @@ test-energy_measurement:
     - EcoLabWorker
   before_script: 
   # Copy Usage scenario scripts from test_scripts dir to the LABPC
-   - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab scripts/test_scripts/org.kde.kate/* karan@$LABPC_IP:/tmp/
+   - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab scripts/test_scripts/org.kde.kate/* kecolab@$LABPC_IP:/tmp/
   script:
    - export CURRENT_DATE=$(date +%Y%m%d)
    # Start taking PM Readings (Script 1)
    - cd /home/gitlab-runner/GUDEPowerMeter && nohup python3 check_gude_modified.py -i 1 -x 192.168.170.22 >> ~/testreadings1.csv 2>/dev/null &
    # Start taking Hardware readings using collectl (for script 1)
-   - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab karan@$LABPC_IP '
+   - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab kecolab@$LABPC_IP '
     nohup collectl -s cdmn -i1 -P --sep 59 -f ~/test1.csv >/dev/null 2>&1 &
     export DISPLAY=:0 && export TERM=xterm && cd /tmp/ && chmod +x log_sus.sh && ./log_sus.sh'
    # Kill the Process taking PM Readings
@@ -47,39 +47,39 @@ test-energy_measurement:
   # Start taking PM Readings (Script 2)
    - cd /home/gitlab-runner/GUDEPowerMeter && nohup python3 check_gude_modified.py -i 1 -x 192.168.170.22 >> ~/testreadings2.csv 2>/dev/null & 
   # Start taking Hardware readings using collectl (for script 2)
-   - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab karan@$LABPC_IP '
+   - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab kecolab@$LABPC_IP '
     nohup collectl -s cdmn -i1 -P --sep 59 -f ~/test2.csv >/dev/null 2>&1 &
     export DISPLAY=:0 && export TERM=xterm && cd /tmp/ && chmod +x log_baseline.sh && ./log_baseline.sh'
    - pkill -f check_gude_modified.py
   # Start taking PM Readings (Script 3)
    - cd /home/gitlab-runner/GUDEPowerMeter && nohup python3 check_gude_modified.py -i 1 -x 192.168.170.22 >> ~/testreadings3.csv 2>/dev/null &
   # Start taking Hardware readings using collectl (for script 3)
-   - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab karan@$LABPC_IP '
+   - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab kecolab@$LABPC_IP '
     nohup collectl -s cdmn -i1 -P --sep 59 -f ~/test3.csv >/dev/null 2>&1 &
     export DISPLAY=:0 && export TERM=xterm && cd /tmp/ && chmod +x log_idle.sh && ./log_idle.sh'
    - pkill -f check_gude_modified.py
    # Export collectl readings using Current Date in the filename
-   - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab karan@$LABPC_IP "
+   - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab kecolab@$LABPC_IP "
     export CURRENT_DATE=$(date +%Y%m%d) && cd ~/ && cp test1.csv-kecolab-$CURRENT_DATE.tab.gz ~/test1.csv-kecolab.tab.gz"
-   - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab karan@$LABPC_IP "
+   - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab kecolab@$LABPC_IP "
     export CURRENT_DATE=$(date +%Y%m%d) && cd ~/ && cp test2.csv-kecolab-$CURRENT_DATE.tab.gz ~/test2.csv-kecolab.tab.gz"
-   - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab karan@$LABPC_IP "
+   - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab kecolab@$LABPC_IP "
     export CURRENT_DATE=$(date +%Y%m%d) && cd ~/ && cp test3.csv-kecolab-$CURRENT_DATE.tab.gz ~/test3.csv-kecolab.tab.gz"
    # Export Power Meter Readings
    - cp ~/testreadings1.csv testreadings1.csv
    - cp ~/testreadings2.csv testreadings2.csv
    - cp ~/testreadings3.csv testreadings3.csv
    # Export all the Raw Power and Hardware Readings to Artifacts
-   - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab karan@$LABPC_IP:~/test1.csv-kecolab.tab.gz test1.csv-kecolab-$CURRENT_DATE.tab.gz
-   - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab karan@$LABPC_IP:~/test2.csv-kecolab.tab.gz test2.csv-kecolab-$CURRENT_DATE.tab.gz
-   - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab karan@$LABPC_IP:~/test3.csv-kecolab.tab.gz test3.csv-kecolab-$CURRENT_DATE.tab.gz
-   - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab karan@$LABPC_IP:~/log_sus.csv log_sus.csv
-   - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab karan@$LABPC_IP:~/log_baseline.csv log_baseline.csv
-   - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab karan@$LABPC_IP:~/log_idle.csv log_idle.csv
+   - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab kecolab@$LABPC_IP:~/test1.csv-kecolab.tab.gz test1.csv-kecolab-$CURRENT_DATE.tab.gz
+   - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab kecolab@$LABPC_IP:~/test2.csv-kecolab.tab.gz test2.csv-kecolab-$CURRENT_DATE.tab.gz
+   - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab kecolab@$LABPC_IP:~/test3.csv-kecolab.tab.gz test3.csv-kecolab-$CURRENT_DATE.tab.gz
+   - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab kecolab@$LABPC_IP:~/log_sus.csv log_sus.csv
+   - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab kecolab@$LABPC_IP:~/log_baseline.csv log_baseline.csv
+   - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab kecolab@$LABPC_IP:~/log_idle.csv log_idle.csv
    # Remove all the logs 
    - cd ~/ && rm testreadings1.csv testreadings2.csv testreadings3.csv
-   # - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab karan@$LABPC_IP ' export CURRENT_DATE=$(date +%Y%m%d) && rm log_sus.csv log_baseline.csv log_idle.csv test1.csv-kecolab-$CURRENT_DATE.tab.gz test2.csv-kecolab-$CURRENT_DATE.tab.gz test3.csv-kecolab-$CURRENT_DATE.tab.gz test1.csv-kecolab.tab.gz test2.csv-kecolab.tab.gz test3.csv-kecolab.tab.gz && cd /tmp/  && rm log_sus.sh log_baseline.sh log_idle.sh'
-   - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab karan@$LABPC_IP ' rm log_sus.csv log_baseline.csv log_idle.csv test1.csv-*.tab.gz test2.csv-*.tab.gz test3.csv-*.tab.gz *_system-info.txt && cd /tmp/ && rm log_sus.sh log_baseline.sh log_idle.sh'
+   # - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab kecolab@$LABPC_IP ' export CURRENT_DATE=$(date +%Y%m%d) && rm log_sus.csv log_baseline.csv log_idle.csv test1.csv-kecolab-$CURRENT_DATE.tab.gz test2.csv-kecolab-$CURRENT_DATE.tab.gz test3.csv-kecolab-$CURRENT_DATE.tab.gz test1.csv-kecolab.tab.gz test2.csv-kecolab.tab.gz test3.csv-kecolab.tab.gz && cd /tmp/  && rm log_sus.sh log_baseline.sh log_idle.sh'
+   - ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab kecolab@$LABPC_IP ' rm log_sus.csv log_baseline.csv log_idle.csv test1.csv-*.tab.gz test2.csv-*.tab.gz test3.csv-*.tab.gz *_system-info.txt && cd /tmp/ && rm log_sus.sh log_baseline.sh log_idle.sh'
   artifacts:
     paths:
       - testreadings1.csv

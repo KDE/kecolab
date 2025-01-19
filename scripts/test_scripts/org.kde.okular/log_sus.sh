@@ -3,16 +3,13 @@
 # Make sure language is set to en_us
 setxkbmap us
 
-######################################
-# THESE NEED TO BE DEFINED IN OKULAR #
-######################################
+##################################################################
+# THESE NEED TO BE DEFINED IN OKULAR THROUGH CONFIGURATION SCRIPT#
+##################################################################
 # Rotate Left: Ctrl+l
 # Rotate Right: Ctrl+r
 # Invert color: Ctrl+i
 # Fit to width: Ctrl+Shift+w
-
-# import keyboard shortcuts
-./configuration.sh
 
 # Log file names start with today's date, so new log file name is given if running past midnight.
 

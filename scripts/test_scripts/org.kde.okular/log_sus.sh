@@ -45,6 +45,7 @@ inxi -F >> ~/$(date -d "today" +"%Y%m%d")\_system-info.txt
 # Start scripts with everything fresh
 # Make sure Okular is not running
 killall okular
+
 # Remove previous logs and dot-files
 rm -f ~/log_sus.csv
 rm -f ~/.config/okularrc

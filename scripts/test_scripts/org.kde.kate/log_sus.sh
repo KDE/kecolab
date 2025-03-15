@@ -19,6 +19,10 @@ stopAction() {
     echo "iteration $1;$(date -I) $(date +%T);stopAction " >> ~/log_sus.csv
 }
 
+# Log the system info at the time of testing
+kate -v > ~/$(date -d "today" +"%Y%m%d")\_system-info.txt
+inxi -F >> ~/$(date -d "today" +"%Y%m%d")\_system-info.txt
+
 # Loop running for 30 times
 # start loop
 for ((i = 1 ; i <= 2 ; i++)); do

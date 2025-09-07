@@ -20,6 +20,7 @@ setxkbmap us
 # It uses the bc command in a pipeline to perform floating-point arithmetic to divide the delta by 1 billion and store the result in the delta variable.
 # Then it sleeps for this delta variable.
 startTime=$(date +%s%N)
+
 elapsed=0
 
 # syncUp function is used to get accurate time to be elapsed

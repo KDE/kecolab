@@ -54,7 +54,10 @@ for ((i = 1; i <= 2; i++)); do
     # quit okular
     echo " quit okular "
     startAction "$i" "quit okular"
-    xdotool key Ctrl+q
+    # making sure okular is focused
+    kdotool search --class okular windowactivate
+    # Keypress Ctrl+q
+    ydotool key 29:1 16:1 29:0 16:0
     syncUp 2
     stopAction "$i"
 

@@ -132,6 +132,7 @@
   <Action name="view_orientation_rotate_cw" shortcut="Ctrl+R"/>
   <Action name="color_mode_inverted" shortcut="Ctrl+I"/>
   <Action name="view_fit_to_width" shortcut="Ctrl+Shift+W"/>
+  <Action name="view_render_mode_single" shortcut="Ctrl+Alt+S"/>
  </ActionProperties>
  <ToolBar hidden="true" iconText="icononly" name="annotationToolBar" newline="true">
   <text>Annotation Toolbar</text>

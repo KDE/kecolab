@@ -10,6 +10,7 @@ setxkbmap us
 # Rotate Right: Ctrl+r
 # Invert color: Ctrl+i
 # Fit to width: Ctrl+Shift+w
+# Single page mode: Ctrl+Alt+s
 
 # Log file names start with today's date, so new log file name is given if running past midnight.
 
@@ -91,29 +92,53 @@ for ((i = 1 ; i <= 2; i++)); do
     # open PDF document
     echo " open PDF document "
     startAction "$i" "open PDF document"
-    xdotool key Ctrl+o
+    # Keypress Ctrl+o
+    ydotool key 29:1 24:1 29:0 24:0
     syncUp 1
-    xdotool type --delay 100 "20yearsofKDE.pdf"
+    # Type 20yearsofKDE.pdf
+    ydotool type -d 100 "20yearsofKDE.pdf"
     syncUp 1
-    xdotool key Return
+    # Keypress Return/Enter
+    ydotool key 28:1 28:0
+    syncUp 1
+    stopAction "$i"
+
+    # Maximize okular window
+    echo " Maximize Window"
+    startAction "$i" "Maximize window"
+    # No direct command 
+    # Move to top left and resize to 100%
+    kdotool search --class okular windowmove 0 0 windowsize 100% 100%
+    syncUp 1
+    stopAction "$i"
+
+    # Toggle to single page mode
+    echo " Single page mode"
+    startAction "$i" "Single page mode"
+    # Keypress Ctrl+Alt+s
+    ydotool key 29:1 56:1 31:1 29:0 56:0 31:0
     syncUp 1
     stopAction "$i"
 
     # Fit to width
     echo " Fit to width "
     startAction "$i" "Fit to width"
-    xdotool key Ctrl+Shift+w
+    # Keypress Ctrl+Shift+w
+    ydotool key 29:1 42:1 17:1 29:0 42:0 17:0
     syncUp 2
     stopAction "$i"
 
     # Enter page number 38 and jump there
     echo " Open Go to dialogue and type 38 "
     startAction "$i" "Open Go to dialogue and type 38"
-    xdotool key Ctrl+g
+    # Keypress Ctrl+g
+    ydotool key 29:1 34:1 29:0 34:0
     syncUp 1
-    xdotool type --delay 400 "38"
+    # Type 38
+    ydotool type -d 400 "38"
     syncUp 1
-    xdotool key Return
+    # Keypress Return
+    ydotool key 28:1 28:0
     syncUp 1
     stopAction "$i"
 
@@ -121,19 +146,44 @@ for ((i = 1 ; i <= 2; i++)); do
     echo " Toggle annotation panel "
     startAction "$i" "Toggle annotation panel"
     # Toggle annotations panel
-    xdotool key F6
+    # Keypress F6
+    ydotool key 64:1 64:0
     syncUp 2
+
     # Move mouse to center of Okular window
-    xdotool mousemove --window "okular" --polar 0 0
+    # No direct Command
+    # Move mouse to center of maximized Okular window
+    echo "Move mouse to center of window"
+    startAction "$i" "Move mouse to center of window"
+
+    # Get the active window geometry
+    WIN_ID=$(kdotool getactivewindow)
+    loc="$(kdotool getwindowgeometry "$WIN_ID")"
+
+    # Extract only width and height (position is always 0,0 for maximized)
+    width=$(echo "$loc" | sed -n 's/.*Geometry: \([0-9.]*\)x.*/\1/p')
+    height=$(echo "$loc" | sed -n 's/.*Geometry: [0-9.]*x\([0-9.]*\).*/\1/p')
+
+    # Calculate center
+    center_x=$(echo "$width / 2" | bc)
+    center_y=$(echo "$height / 2" | bc)
+
+    # Reset mouse to top-left and move to center
+    ydotool mousemove -x -9999 -y -9999 
+    ydotool mousemove -x "$center_x" -y "$center_y"
+
     syncUp 2
     stopAction "$i"
 
-    # Select highlighter tool
+    # Select text with highlighter tool
     echo " Toggle highlighter tool and select text to highlight "
     startAction "$i" "Toggle highlighter tool and select text to highlight"
-    xdotool key Alt+1
+    # Keypress Alt+1
+    ydotool key 56:1 2:1 56:0 2:0
     # Hold mouse button down, move directly downwards (180) for 75 pixels, unclick
-    xdotool mousedown 1 mousemove --polar 180 75 click 1
+    ydotool click 0x40
+    ydotool mousemove -x 0 -y 75
+    ydotool click 0x80
     syncUp 2
     stopAction "$i"
 
@@ -141,14 +191,19 @@ for ((i = 1 ; i <= 2; i++)); do
     # window (180) over highlighted text, double click to add note
     echo " Write annotation "
     startAction "$i" "Write annotation"
-    xdotool mousemove --polar 180 25 click --repeat 2 1 type --delay 200 'Very interesting text! I should read more about this topic.'
+    # Move directly upwards (180) for 25 pixels and double click to open annotation
+    ydotool mousemove -x 0 -y -25
+    ydotool click -r 2 0xC0
+    # Type 'Very interesting text! I should read more about this topic.
+    ydotool type -d 200 'Very interesting text! I should read more about this topic.'
     syncUp 8
     stopAction "$i"
 
     # return to browsing mode
     echo " Toggle highlighter tool again to return to browsing mode "
     startAction "$i" "Toggle highlighter tool again to return to browsing mode"
-    xdotool key Alt+1
+    # Keypress Alt+1
+    ydotool key 56:1 2:1 56:0 2:0
     syncUp 2
     stopAction "$i"
 
@@ -156,81 +211,109 @@ for ((i = 1 ; i <= 2; i++)); do
     echo " Start presentation mode "
     startAction "$i" "Start presentation mode"
     # Toggle presentation
-    xdotool key Ctrl+Shift+p
+    # Keypress Ctrl+Shift+p
+    ydotool key 29:1 42:1 25:1 29:0 42:0 25:0
     syncUp 1
     # Close default popup window
-    xdotool key Return
+    # Keypress Return/Enter
+    ydotool key 28:1 28:0
     syncUp 1
     stopAction "$i"
 
     # Move around the pages
     echo " Move down five pages "
     startAction "$i" "Move down a page 1"
-    xdotool key Down
+    # Keypress Down
+    ydotool key 108:1 108:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move down a page 2"
-    xdotool key Down
+    # Keypress Down
+    ydotool key 108:1 108:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move down a page 3"
-    xdotool key Down
+    # Keypress Down
+    ydotool key 108:1 108:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move down a page 4"
-    xdotool key Down
+    # Keypress Down
+    ydotool key 108:1 108:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move down a page 5"
-    xdotool key Down
+    # Keypress Down
+    ydotool key 108:1 108:0
     syncUp 2
     stopAction "$i"
 
     echo " Move up five pages "
     startAction "$i" "Move up a page 1"
-    xdotool key Up
+    # Keypress Up
+    ydotool key 103:1 103:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move up a page 2"
-    xdotool key Up
+    # Keypress Up
+    ydotool key 103:1 103:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move up a page 3"
-    xdotool key Up
+    # Keypress Up
+    ydotool key 103:1 103:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move up a page 4"
-    xdotool key Up
+    # Keypress Up
+    ydotool key 103:1 103:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move up a page 5"
-    xdotool key Up
+    # Keypress Up
+    ydotool key 103:1 103:0
     syncUp 2
     stopAction "$i"
 
     # Exit
     echo " Exit presentation mode "
     startAction "$i" "Exit presentation mode"
-    xdotool key Escape
+    # Keypress Escape
+    ydotool key 1:1 1:0
     syncUp 1
     stopAction "$i"
 
-    # Move mouse to center of Okular window, click mouse to exit text box
+    # Move mouse to center of Okular window, click mouse to exit annotation text box
     echo " Move mouse to center of window "
     startAction "$i" "Move mouse to center of window"
-    xdotool mousemove --window "okular" --polar 0 0 click 1
+    # Get the active window geometry
+    WIN_ID=$(kdotool getactivewindow)
+    loc="$(kdotool getwindowgeometry "$WIN_ID")"
+    # Extract only width and height (position is always 0,0 for maximized)
+    width=$(echo "$loc" | sed -n 's/.*Geometry: \([0-9.]*\)x.*/\1/p')
+    height=$(echo "$loc" | sed -n 's/.*Geometry: [0-9.]*x\([0-9.]*\).*/\1/p')
+    # Calculate center
+    center_x=$(echo "$width / 2" | bc)
+    center_y=$(echo "$height / 2" | bc)
+    # Reset mouse to top-left and move to center
+    ydotool mousemove -x -9999 -y -9999
+    ydotool mousemove -x "$center_x" -y "$center_y"
+    ydotool click 0xC0
+
     syncUp 3
     stopAction "$i"
 
     # Rotate page right twice
     echo " Rotate page right twice "
     startAction "$i" "Rotate page right 1"
-    xdotool key Ctrl+r
+    # Keypress Ctrl+r
+    ydotool key 29:1 19:1 29:0 19:0
     syncUp 2
     stopAction "$i"
     syncUp 4
     startAction "$i" "Rotate page right 2"
-    xdotool key Ctrl+r
+    # Keypress Ctrl+r
+    ydotool key 29:1 19:1 29:0 19:0
     syncUp 2
     stopAction "$i"
     syncUp 4
@@ -238,13 +321,15 @@ for ((i = 1 ; i <= 2; i++)); do
     # Rotate page left twice
     echo " Rotate page left twice "
     startAction "$i" "Rotate page left 1"
-    xdotool key Ctrl+l
+    # Keypress Ctrl+l
+    ydotool key 29:1 38:1 29:0 38:0
     syncUp 2
     stopAction "$i"
     syncUp 4
     echo " Rotate page left 2 "
     startAction "$i" "Rotate page left 2"
-    xdotool key Ctrl+l
+    # Keypress Ctrl+l
+    ydotool key 29:1 38:1 29:0 38:0
     syncUp 2
     stopAction "$i"
     syncUp 4
@@ -252,45 +337,55 @@ for ((i = 1 ; i <= 2; i++)); do
     # Move around the pages
     echo " Move forward five pages "
     startAction "$i" "Move forward a page 1"
-    xdotool key Right
+    # Keypress Right
+    ydotool key 106:1 106:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move forward a page 2"
-    xdotool key Right
+    # Keypress Right
+    ydotool key 106:1 106:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move forward a page 3"
-    xdotool key Right
+    # Keypress Right
+    ydotool key 106:1 106:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move forward a page 4"
-    xdotool key Right
+    # Keypress Right
+    ydotool key 106:1 106:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move forward a page 5"
-    xdotool key Right
+    # Keypress Right
+    ydotool key 106:1 106:0
     syncUp 2
     stopAction "$i"
 
     echo " Move backward five pages "
     startAction "$i" "Move backward a page 1"
-    xdotool key Left
+    # Keypress Left
+    ydotool key 105:1 105:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move backward a page 2"
-    xdotool key Left
+    # Keypress Left
+    ydotool key 105:1 105:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move backward a page 3"
-    xdotool key Left
+    # Keypress Left
+    ydotool key 105:1 105:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move backward a page 4"
-    xdotool key Left
+    # Keypress Left
+    ydotool key 105:1 105:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move backward a page 5"
-    xdotool key Left
+    # Keypress Left
+    ydotool key 105:1 105:0
     syncUp 2
     stopAction "$i"
     syncUp 1
@@ -298,37 +393,44 @@ for ((i = 1 ; i <= 2; i++)); do
     # Zoom out
     echo " Zoom to 100 percent "
     startAction "$i" "Zoom to 100 percent"
-    xdotool key Ctrl+0
+    # Keypress Ctrl+0
+    ydotool key 29:1 11:1 29:0 11:0
     syncUp 3
     stopAction "$i"
 
     echo " Zoom to 400 percent "
     # Zoom in
     startAction "$i" "Zoom in to 400 percent 1"
-    xdotool key Ctrl+plus
+    # Keypress Ctrl+plus
+    ydotool key 29:1 13:1 29:0 13:0
     syncUp 1
     stopAction "$i"
     startAction "$i" "Zoom in to 400 percent 2"
-    xdotool key Ctrl+plus
+    # Keypress Ctrl+plus
+    ydotool key 29:1 13:1 29:0 13:0
     syncUp 1
     stopAction "$i"
     startAction "$i" "Zoom in to 400 percent 3"
-    xdotool key Ctrl+plus
+    # Keypress Ctrl+plus
+    ydotool key 29:1 13:1 29:0 13:0
     syncUp 1
     stopAction "$i"
     startAction "$i" "Zoom in to 400 percent 4"
-    xdotool key Ctrl+plus
+    # Keypress Ctrl+plus
+    ydotool key 29:1 13:1 29:0 13:0
     syncUp 1
     stopAction "$i"
     startAction "$i" "Zoom in to 400 percent 5"
-    xdotool key Ctrl+plus
+    # Keypress Ctrl+plus
+    ydotool key 29:1 13:1 29:0 13:0
     syncUp 1
     stopAction "$i"
 
     # Fit to width
     echo " Fit to width "
     startAction "$i" "Fit to width"
-    xdotool key Ctrl+Shift+w
+    # Keypress Ctrl+Shift+w
+    ydotool key 29:1 42:1 17:1 29:0 42:0 17:0
     syncUp 1
     stopAction "$i"
 
@@ -336,7 +438,8 @@ for ((i = 1 ; i <= 2; i++)); do
     echo " Invert colors "
     startAction "$i" "Invert colors"
     # Invert colors
-    xdotool key Ctrl+i
+    # Keypress Ctrl+i
+    ydotool key 29:1 23:1 29:0 23:0
     syncUp 2
     stopAction "$i"
     syncUp 3
@@ -347,30 +450,43 @@ for ((i = 1 ; i <= 2; i++)); do
     # Enter page number 42 and jump there
     echo " Open Go to dialogue and type 42 "
     startAction "$i" "Open Go to dialogue and type 42"
-    xdotool key Ctrl+g
+    # Keypress Ctrl+g
+    ydotool key 29:1 34:1 29:0 34:0
     syncUp 1
-    xdotool type --delay 400 "42"
+    # Type "42"
+    ydotool type "42"
     syncUp 1
-    xdotool key Return
+    # Keypress Return/Enter
+    ydotool key 28:1 28:0
     syncUp 2
     stopAction "$i"
 
-    # Mark text and insert comment
-    echo " Toggle annotation panel "
-    startAction "$i" "Toggle annotation panel"
-    # Toggle annotations panel
-    xdotool key F6
-    syncUp 2
-    # Move mouse to center of Okular window
-    xdotool mousemove --window "okular" --polar 0 0
+    echo " Move mouse to center of window "
+    startAction "$i" "Move mouse to center of window"
+    # Get the active window geometry
+    WIN_ID=$(kdotool getactivewindow)
+    loc="$(kdotool getwindowgeometry "$WIN_ID")"
+    # Extract only width and height (position is always 0,0 for maximized)
+    width=$(echo "$loc" | sed -n 's/.*Geometry: \([0-9.]*\)x.*/\1/p')
+    height=$(echo "$loc" | sed -n 's/.*Geometry: [0-9.]*x\([0-9.]*\).*/\1/p')
+    # Calculate center
+    center_x=$(echo "$width / 2" | bc)
+    center_y=$(echo "$height / 2" | bc)
+    # Reset mouse to top-left and move to center
+    ydotool mousemove -x -9999 -y -9999
+    ydotool mousemove -x "$center_x" -y "$center_y"
     syncUp 2
     stopAction "$i"
 
-    # Select highlighter tool
+    # Select text using highlighter tool
     echo " Toggle highlighter tool and select text to highlight "
     startAction "$i" "Toggle highlighter tool and select text to highlight"
-    xdotool key Alt+1
-    xdotool mousedown 1 mousemove --polar 180 75 click 1
+    # Keypress Alt+1
+    ydotool key 56:1 2:1 56:0 2:0
+    # Hold mouse button down, move directly downwards (180) for 75 pixels, unclick
+    ydotool click 0x40
+    ydotool mousemove -y 75 -x 0
+    ydotool click 0x80
     syncUp 2
     stopAction "$i"
 
@@ -378,14 +494,19 @@ for ((i = 1 ; i <= 2; i++)); do
     # window (180) over highlighted text, double click to add note
     echo " Write annotation "
     startAction "$i" "Write annotation"
-    xdotool mousemove --polar 180 25 click --repeat 2 1 type --delay 200 'Again this is very interesting, should read more.'
+    # Move directly upwards (180) for 25 pixels and double click to open annotation.
+    ydotool mousemove -x 0 -y -25
+    ydotool click -r 2 0xC0
+    # Type 'Again this is very interesting, should read more.'
+    ydotool type -d 200 'Again this is very interesting, should read more.'
     syncUp 8
     stopAction "$i"
 
     # return to browsing mode
     echo " Toggle highlighter tool again to return to browsing mode "
     startAction "$i" "Toggle highlighter tool again to return to browsing mode"
-    xdotool key Alt+1
+    # Keypress Alt+1
+    ydotool key 56:1 2:1 56:0 2:0
     syncUp 1
     stopAction "$i"
 
@@ -393,32 +514,53 @@ for ((i = 1 ; i <= 2; i++)); do
     echo " Start presentation mode "
     startAction "$i" "Start presentation mode"
     # Toggle presentation
-    xdotool key Ctrl+Shift+p
+    # Keypress Ctrl+Shift+p
+    ydotool key 29:1 42:1 25:1 29:0 42:0 25:0
     syncUp 2
     # Close default popup window
-    xdotool key Return
+    # Keypress Return/Enter
+    ydotool key 28:1 28:0
     syncUp 19
     stopAction "$i"
 
     # Exit presentation
     echo " Exit presentation mode "
     startAction "$i" "Exit presentation mode"
-    xdotool key Escape
+    # Keypress Escape
+    ydotool key 1:1 1:0
     syncUp 1
-    # Move mouse to center of Okular window, click mouse to exit text box
-    xdotool mousemove --window "okular" --polar 0 0 click 1
-    syncUp 1
+
+    # Move mouse to center of Okular window, click mouse to exit annotation text box
+    echo " Move mouse to center of window "
+    startAction "$i" "Move mouse to center of window"
+    # Get the active window geometry
+    WIN_ID=$(kdotool getactivewindow)
+    loc="$(kdotool getwindowgeometry "$WIN_ID")"
+    # Extract only width and height (position is always 0,0 for maximized)
+    width=$(echo "$loc" | sed -n 's/.*Geometry: \([0-9.]*\)x.*/\1/p')
+    height=$(echo "$loc" | sed -n 's/.*Geometry: [0-9.]*x\([0-9.]*\).*/\1/p')
+    # Calculate center
+    center_x=$(echo "$width / 2" | bc)
+    center_y=$(echo "$height / 2" | bc)
+    # Reset mouse to top-left and move to center
+    ydotool mousemove -x -9999 -y -9999
+    ydotool mousemove -x "$center_x" -y "$center_y"
+    ydotool click 0xC0
+
+    syncUp 3
     stopAction "$i"
 
     # Rotate page right twice
     echo " Rotate page right twice "
     startAction "$i" "Rotate page right 1"
-    xdotool key Ctrl+r
+    # Keypress Ctrl+r
+    ydotool key 29:1 19:1 29:0 19:0
     syncUp 2
     stopAction "$i"
     syncUp 4
     startAction "$i" "Rotate page right 2"
-    xdotool key Ctrl+r
+    # Keypress Ctrl+r
+    ydotool key 29:1 19:1 29:0 19:0
     syncUp 2
     stopAction "$i"
     syncUp 4
@@ -426,13 +568,15 @@ for ((i = 1 ; i <= 2; i++)); do
     # Rotate page left twice
     echo " Rotate page left twice "
     startAction "$i" "Rotate page left 1"
-    xdotool key Ctrl+l
+    # Keypress Ctrl+l
+    ydotool key 29:1 38:1 29:0 38:0
     syncUp 2
     stopAction "$i"
     syncUp 4
     echo " Rotate page left 2 "
     startAction "$i" "Rotate page left 2"
-    xdotool key Ctrl+l
+    # Keypress Ctrl+l
+    ydotool key 29:1 38:1 29:0 38:0
     syncUp 2
     stopAction "$i"
     syncUp 4
@@ -440,75 +584,91 @@ for ((i = 1 ; i <= 2; i++)); do
     # Move around the pages
     echo " Move forward five pages "
     startAction "$i" "Move forward a page 1"
-    xdotool key Right
+    # Keypress Right
+    ydotool key 106:1 106:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move forward a page 2"
-    xdotool key Right
+    # Keypress Right
+    ydotool key 106:1 106:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move forward a page 3"
-    xdotool key Right
+    # Keypress Right
+    ydotool key 106:1 106:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move forward a page 4"
-    xdotool key Right
+    # Keypress Right
+    ydotool key 106:1 106:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move forward a page 5"
-    xdotool key Right
+    # Keypress Right
+    ydotool key 106:1 106:0
     syncUp 2
     stopAction "$i"
 
     echo " Move backward five pages "
     startAction "$i" "Move backward a page 1"
-    xdotool key Left
+    # Keypress Left
+    ydotool key 105:1 105:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move backward a page 2"
-    xdotool key Left
+    # Keypress Left
+    ydotool key 105:1 105:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move backward a page 3"
-    xdotool key Left
+    # Keypress Left
+    ydotool key 105:1 105:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move backward a page 4"
-    xdotool key Left
+    # Keypress Left
+    ydotool key 105:1 105:0
     syncUp 2
     stopAction "$i"
     startAction "$i" "Move backward a page 5"
-    xdotool key Left
+    # Keypress Left
+    ydotool key 105:1 105:0
     syncUp 2
     stopAction "$i"
 
     # Zoom out
     echo " Zoom to 100 percent "
     startAction "$i" "Zoom to 100 percent"
-    xdotool key Ctrl+0
+    # Keypress Ctrl+0
+    ydotool key 29:1 11:1 29:0 11:0
     syncUp 3
     stopAction "$i"
 
     echo " Zoom to 400 percent "
     # Zoom in
     startAction "$i" "Zoom in to 400 percent 1"
-    xdotool key Ctrl+plus
+    # Keypress Ctrl+plus
+    ydotool key 29:1 13:1 29:0 13:0
     syncUp 1
     stopAction "$i"
     startAction "$i" "Zoom in to 400 percent 2"
-    xdotool key Ctrl+plus
+    # Keypress Ctrl+plus
+    ydotool key 29:1 13:1 29:0 13:0
     syncUp 1
     stopAction "$i"
     startAction "$i" "Zoom in to 400 percent 3"
-    xdotool key Ctrl+plus
+    # Keypress Ctrl+plus
+    ydotool key 29:1 13:1 29:0 13:0
     syncUp 1
     stopAction "$i"
     startAction "$i" "Zoom in to 400 percent 4"
-    xdotool key Ctrl+plus
+    # Keypress Ctrl+plus
+    ydotool key 29:1 13:1 29:0 13:0
     syncUp 1
     stopAction "$i"
     startAction "$i" "Zoom in to 400 percent 5"
-    xdotool key Ctrl+plus
+    # Keypress Ctrl+plus
+    ydotool key 29:1 13:1 29:0 13:0
     syncUp 1
     stopAction "$i"
     syncUp 1
@@ -516,16 +676,25 @@ for ((i = 1 ; i <= 2; i++)); do
     # Fit to width
     echo " Fit to width "
     startAction "$i" "Fit to width"
-    xdotool key Ctrl+Shift+w
+    # Keypress Ctrl+Shift+w
+    ydotool key 29:1 42:1 17:1 29:0 42:0 17:0
     syncUp 1
     stopAction "$i"
 
     # Invert colors back
     echo " Invert colors back "
     startAction "$i" "Invert colors back"
-    xdotool key Ctrl+i
+    # Keypress Ctrl+i
+    ydotool key 29:1 23:1 29:0 23:0
     syncUp 2
     stopAction "$i"
+    syncUp 2
+
+    echo " Toggle annotation panel "
+    startAction "$i" "Toggle annotation panel"
+    # Toggle annotations panel
+    # Keypress F6
+    ydotool key 64:1 64:0
     syncUp 2
 
 # REPEAT OVER
@@ -534,14 +703,16 @@ for ((i = 1 ; i <= 2; i++)); do
     # save
     echo " Save PDF "
     startAction "$i" "Save PDF"
-    xdotool key Ctrl+s
+    # Keypress Ctrl+s
+    ydotool key 29:1 31:1 29:0 31:0
     syncUp 1
     stopAction "$i"
 
     # quit okular
     echo " Quit Okular "
     startAction "$i" "Quit Okular"
-    xdotool key Ctrl+q
+    # Keypress Ctrl+q
+    ydotool key 29:1 16:1 29:0 16:0
     syncUp 2
     stopAction "$i"
 

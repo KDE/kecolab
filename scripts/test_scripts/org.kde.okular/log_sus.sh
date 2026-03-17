@@ -27,6 +27,11 @@ elapsed=0
 syncUp() {
     elapsed=$((elapsed + ($1 * 1000000000)))
     delta=$(echo "scale=10; (($startTime + $elapsed) - $(date +%s%N)) / 1000000000" | bc)
+
+    if (( $(echo "$delta < 0" | bc -l) )); then
+        delta=0
+    fi
+
     echo "Sleep" $delta
     sleep $delta
 }
@@ -96,7 +101,7 @@ for ((i = 1 ; i <= 2; i++)); do
     ydotool key 29:1 24:1 29:0 24:0
     syncUp 1
     # Type 20yearsofKDE.pdf
-    ydotool type -d 100 "20yearsofKDE.pdf"
+    ydotool type "20yearsofKDE.pdf"
     syncUp 1
     # Keypress Return/Enter
     ydotool key 28:1 28:0
@@ -109,7 +114,7 @@ for ((i = 1 ; i <= 2; i++)); do
     # No direct command 
     # Move to top left and resize to 100%
     kdotool search --class okular windowmove 0 0 windowsize 100% 100%
-    syncUp 1
+    syncUp 2
     stopAction "$i"
 
     # Toggle to single page mode
@@ -135,7 +140,7 @@ for ((i = 1 ; i <= 2; i++)); do
     ydotool key 29:1 34:1 29:0 34:0
     syncUp 1
     # Type 38
-    ydotool type -d 400 "38"
+    ydotool type "38"
     syncUp 1
     # Keypress Return
     ydotool key 28:1 28:0
@@ -169,7 +174,8 @@ for ((i = 1 ; i <= 2; i++)); do
     center_y=$(echo "$height / 2" | bc)
 
     # Reset mouse to top-left and move to center
-    ydotool mousemove -x -9999 -y -9999 
+    ydotool mousemove -x -9999 -y -9999
+    syncUp 2
     ydotool mousemove -x "$center_x" -y "$center_y"
 
     syncUp 2
@@ -180,9 +186,11 @@ for ((i = 1 ; i <= 2; i++)); do
     startAction "$i" "Toggle highlighter tool and select text to highlight"
     # Keypress Alt+1
     ydotool key 56:1 2:1 56:0 2:0
+    syncUp 1
     # Hold mouse button down, move directly downwards (180) for 75 pixels, unclick
     ydotool click 0x40
     ydotool mousemove -x 0 -y 75
+    syncUp 2
     ydotool click 0x80
     syncUp 2
     stopAction "$i"
@@ -195,7 +203,7 @@ for ((i = 1 ; i <= 2; i++)); do
     ydotool mousemove -x 0 -y -25
     ydotool click -r 2 0xC0
     # Type 'Very interesting text! I should read more about this topic.
-    ydotool type -d 200 'Very interesting text! I should read more about this topic.'
+    ydotool type 'Very interesting text! I should read more about this topic.'
     syncUp 8
     stopAction "$i"
 
@@ -213,7 +221,7 @@ for ((i = 1 ; i <= 2; i++)); do
     # Toggle presentation
     # Keypress Ctrl+Shift+p
     ydotool key 29:1 42:1 25:1 29:0 42:0 25:0
-    syncUp 1
+    syncUp 3
     # Close default popup window
     # Keypress Return/Enter
     ydotool key 28:1 28:0
@@ -297,7 +305,9 @@ for ((i = 1 ; i <= 2; i++)); do
     center_y=$(echo "$height / 2" | bc)
     # Reset mouse to top-left and move to center
     ydotool mousemove -x -9999 -y -9999
+    syncUp 1
     ydotool mousemove -x "$center_x" -y "$center_y"
+    syncUp 2
     ydotool click 0xC0
 
     syncUp 3
@@ -498,7 +508,7 @@ for ((i = 1 ; i <= 2; i++)); do
     ydotool mousemove -x 0 -y -25
     ydotool click -r 2 0xC0
     # Type 'Again this is very interesting, should read more.'
-    ydotool type -d 200 'Again this is very interesting, should read more.'
+    ydotool type 'Again this is very interesting, should read more.'
     syncUp 8
     stopAction "$i"
 

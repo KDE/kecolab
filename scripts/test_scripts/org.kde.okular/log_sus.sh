@@ -45,18 +45,18 @@ stopAction() {
 }
 
 # Log the system info at the time of testing
-okular -v > ~/$(date -d "today" +"%Y%m%d")\_system-info.txt
+flatpak info org.kde.okular >> ~/$(date +%Y%m%d)_system-info.txt
 inxi -F >> ~/$(date -d "today" +"%Y%m%d")\_system-info.txt
 
 # Start scripts with everything fresh
 # Make sure Okular is not running
-killall okular
+flatpak kill org.kde.okular || true
 
 # Remove previous logs and dot-files
 rm -f ~/log_sus.csv
-rm -f ~/.config/okularrc
-rm -f ~/.config/okularpartrc
-rm -f -r ~/.local/share/okular/*
+rm ~/.var/app/org.kde.okular/config/okularrc
+rm ~/.var/app/org.kde.okular/config/okularpartrc
+rm -r ~/.var/app/org.kde.okular/cache/*
 rm -f ~/Documents/20yearsofKDE.pdf
 
 # Define PDF used for the script exists
@@ -90,7 +90,7 @@ for ((i = 1 ; i <= 2; i++)); do
     # Open okular, discard STDERR and STDOUT to /dev/null
     echo " Open Okular "
     startAction "$i" "Open Okular"
-    okular > /dev/null 2>&1 &
+    flatpak run org.kde.okular > /dev/null 2>&1 &
     syncUp 2
     stopAction "$i"
 
@@ -734,9 +734,9 @@ for ((i = 1 ; i <= 2; i++)); do
 
     ## clean up
     # remove logs
-    rm ~/.config/okularrc
-    rm ~/.config/okularpartrc
-    rm -r ~/.local/share/okular/*
+    rm ~/.var/app/org.kde.okular/config/okularrc
+    rm ~/.var/app/org.kde.okular/config/okularpartrc
+    rm -r ~/.var/app/org.kde.okular/cache/*
     # delete annotated PDF
     rm ~/Documents/20yearsofKDE.pdf
 

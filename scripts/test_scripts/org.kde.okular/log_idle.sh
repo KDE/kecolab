@@ -20,12 +20,12 @@ stopAction() {
 
 # Start scripts with everything fresh
 # Make sure Okular is not running
-killall okular
+flatpak kill org.kde.okular || true
 # Remove previous logs and dot-files
 rm -f ~/log_idle.csv
-rm -f ~/.config/okularrc
-rm -f ~/.config/okularpartrc
-rm -f -r ~/.local/share/okular/*
+rm ~/.var/app/org.kde.okular/config/okularrc
+rm ~/.var/app/org.kde.okular/config/okularpartrc
+rm -r ~/.var/app/org.kde.okular/cache/*
 
 for ((i = 1; i <= 2; i++)); do
 
@@ -42,7 +42,7 @@ for ((i = 1; i <= 2; i++)); do
     # open okular
     echo " open okular "
     startAction "$i" "open okular"
-    okular > /dev/null 2>&1 & # open okular
+    flatpak run org.kde.okular > /dev/null 2>&1 & #Open Okular
     syncUp 2
     stopAction "$i"
 
@@ -68,9 +68,9 @@ for ((i = 1; i <= 2; i++)); do
     syncUp 1
 
     # Remove logs
-    rm ~/.config/okularrc
-    rm ~/.config/okularpartrc
-    rm -r ~/.local/share/okular/*
+    rm ~/.var/app/org.kde.okular/config/okularrc
+    rm ~/.var/app/org.kde.okular/config/okularpartrc
+    rm -r ~/.var/app/org.kde.okular/cache/*
 
     # cool down
     syncUp 10 # 30

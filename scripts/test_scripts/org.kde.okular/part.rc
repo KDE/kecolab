@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <!DOCTYPE gui SYSTEM 'kpartgui.dtd'>
-<gui name="okular_part" version="54">
+<gui name="okular_part" version="55">
  <MenuBar>
   <Menu name="file">
    <text>&amp;File</text>
@@ -90,6 +90,7 @@
    <Action name="add_digital_signature"/>
    <Separator/>
    <Action name="speak_document"/>
+   <Action name="speak_from_current_page"/>
    <Action name="speak_current_page"/>
    <Action name="speak_stop_all"/>
    <Action name="speak_pause_resume"/>
@@ -128,11 +129,11 @@
   <Action name="show_leftpanel" priority="0"/>
   <Action name="view_zoom_out" priority="0"/>
   <Action name="view_zoom_in" priority="0"/>
-  <Action name="view_orientation_rotate_ccw" shortcut="Ctrl+L"/>
   <Action name="view_orientation_rotate_cw" shortcut="Ctrl+R"/>
-  <Action name="color_mode_inverted" shortcut="Ctrl+I"/>
+  <Action name="view_orientation_rotate_ccw" shortcut="Ctrl+L"/>
   <Action name="view_fit_to_width" shortcut="Ctrl+Shift+W"/>
   <Action name="view_render_mode_single" shortcut="Ctrl+Alt+S"/>
+  <Action name="color_mode_inverted" shortcut="Ctrl+I"/>
  </ActionProperties>
  <ToolBar hidden="true" iconText="icononly" name="annotationToolBar" newline="true">
   <text>Annotation Toolbar</text>

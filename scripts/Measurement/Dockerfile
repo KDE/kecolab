@@ -13,11 +13,11 @@ RUN apt-get update && \
     apt-get update -qq
 
 # Install R and necessary system packages
-RUN apt-get install -y r-base libxml2-dev libcurl4-openssl-dev libssl-dev wget git
+RUN apt-get install -y r-base libxml2-dev libcurl4-openssl-dev libssl-dev wget git cmake build-essential pandoc
 
 # Install R packages from CRAN
-RUN R -e "install.packages(c('tidyr', 'dplyr', 'lubridate', 'psych', 'rmarkdown', 'rjson', 'readr', 'reshape2', 'RColorBrewer', 'tinytex'), repos = 'http://cran.r-project.org')" && \
-    R -e "tinytex::install_tinytex()" && \
+RUN R -e "options(timeout=300); install.packages(c('tidyr','dplyr','lubridate','psych','rmarkdown','rjson','readr','reshape2','RColorBrewer','tinytex'), repos='https://cloud.r-project.org')" && \
+    R -e "tinytex::install_tinytex(repository='illinois')" && \
     R -e "tinytex::tlmgr_install('babel-english')"
 
 # Clone the remote-eco-lab repository, copy preprocessing and measurement scripts, and remove the repository

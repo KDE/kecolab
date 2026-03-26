@@ -71,14 +71,14 @@ fi
 
 # Loop running for 30 times
 # Start loop
-for ((i = 1 ; i <= 2; i++)); do
+for ((i = 1 ; i <= 30; i++)); do
 
     # Copy PDF to home directory
     # so PDF is identical every time
     cp ~/Documents/okular/20yearsofKDE.pdf ~/Documents/20yearsofKDE.pdf
 
     # Burn in time
-    syncUp 10 # 60
+    syncUp 60
 
     # Start iteration
     echo "iteration $i;$(date -I) $(date +%T);startTestrun" >> ~/log_sus.csv
@@ -741,7 +741,7 @@ for ((i = 1 ; i <= 2; i++)); do
     rm ~/Documents/20yearsofKDE.pdf
 
     # cool down
-    syncUp 10 # 30
+    syncUp 30
 
     clear
 

@@ -6,6 +6,11 @@ elapsed=0
 syncUp() {
     elapsed=$((elapsed + ($1 * 1000000000)))
     delta=$(echo "scale=10; (($startTime + $elapsed) - $(date +%s%N)) / 1000000000" | bc)
+
+    if (( $(echo "$delta < 0" | bc -l) )); then
+        delta=0
+    fi
+
     echo "Sleep" $delta
     sleep $delta
 }
@@ -27,10 +32,10 @@ rm ~/.var/app/org.kde.okular/config/okularrc
 rm ~/.var/app/org.kde.okular/config/okularpartrc
 rm -r ~/.var/app/org.kde.okular/cache/*
 
-for ((i = 1; i <= 2; i++)); do
+for ((i = 1; i <= 10; i++)); do
 
     # burn in
-    syncUp 10 # 60
+    syncUp 60
 
     # start
     echo "iteration $i;$(date -I) $(date +%T);startTestrun" >> ~/log_idle.csv
@@ -48,7 +53,7 @@ for ((i = 1; i <= 2; i++)); do
 
     # leave open for time (in seconds)
     # for SUS minus start pause minus wrap-up
-    syncUp 10 # 210
+    syncUp 210
 
     # wrap-up
     # quit okular
@@ -73,7 +78,7 @@ for ((i = 1; i <= 2; i++)); do
     rm -r ~/.var/app/org.kde.okular/cache/*
 
     # cool down
-    syncUp 10 # 30
+    syncUp 30
 
     clear
 

@@ -32,8 +32,7 @@ rm ~/.var/app/org.kde.okular/config/okularrc
 rm ~/.var/app/org.kde.okular/config/okularpartrc
 rm -r ~/.var/app/org.kde.okular/cache/*
 
-for ((i = 1; i <= 2; i++)); do
-# for ((i = 1; i <= 2; i++)); do
+for ((i = 1; i <= 10; i++)); do
 
     # burn in
     syncUp 60

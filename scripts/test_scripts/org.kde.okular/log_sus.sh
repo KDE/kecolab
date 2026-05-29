@@ -71,7 +71,7 @@ fi
 
 # Loop running for 30 times
 # Start loop
-for ((i = 1 ; i <= 2; i++)); do
+for ((i = 1 ; i <= 4; i++)); do
 # for ((i = 1 ; i <= 2; i++)); do
 
     # Copy PDF to home directory
@@ -714,7 +714,7 @@ for ((i = 1 ; i <= 2; i++)); do
     # Keypress F6
     ydotool key 64:1 64:0
     syncUp 2
-    stopAction "$i"ß
+    stopAction "$i"
 
 # REPEAT OVER
 

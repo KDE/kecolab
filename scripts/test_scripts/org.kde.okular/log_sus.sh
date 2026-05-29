@@ -71,7 +71,8 @@ fi
 
 # Loop running for 30 times
 # Start loop
-for ((i = 1 ; i <= 30; i++)); do
+for ((i = 1 ; i <= 2; i++)); do
+# for ((i = 1 ; i <= 2; i++)); do
 
     # Copy PDF to home directory
     # so PDF is identical every time
@@ -108,6 +109,7 @@ for ((i = 1 ; i <= 30; i++)); do
     syncUp 1
     stopAction "$i"
 
+    # NOTE not in xdotool script
     # Maximize okular window
     echo " Maximize Window"
     startAction "$i" "Maximize window"
@@ -117,6 +119,7 @@ for ((i = 1 ; i <= 30; i++)); do
     syncUp 2
     stopAction "$i"
 
+    # NOTE not in xdotool script
     # Toggle to single page mode
     echo " Single page mode"
     startAction "$i" "Single page mode"
@@ -147,6 +150,7 @@ for ((i = 1 ; i <= 30; i++)); do
     syncUp 1
     stopAction "$i"
 
+    # TODO Script differs significantly from xdotool
     # Mark text and insert comment
     echo " Toggle annotation panel "
     startAction "$i" "Toggle annotation panel"
@@ -159,7 +163,6 @@ for ((i = 1 ; i <= 30; i++)); do
     # No direct Command
     # Move mouse to center of maximized Okular window
     echo "Move mouse to center of window"
-    startAction "$i" "Move mouse to center of window"
 
     # Get the active window geometry
     WIN_ID=$(kdotool getactivewindow)
@@ -190,8 +193,10 @@ for ((i = 1 ; i <= 30; i++)); do
     # Hold mouse button down, move directly downwards (180) for 75 pixels, unclick
     ydotool click 0x40
     ydotool mousemove -x 0 -y 75
+    # NOTE change to 1
     syncUp 2
     ydotool click 0x80
+    # NOTE change to 1
     syncUp 2
     stopAction "$i"
 
@@ -221,6 +226,7 @@ for ((i = 1 ; i <= 30; i++)); do
     # Toggle presentation
     # Keypress Ctrl+Shift+p
     ydotool key 29:1 42:1 25:1 29:0 42:0 25:0
+    # NOTE change sync to 1
     syncUp 3
     # Close default popup window
     # Keypress Return/Enter
@@ -307,9 +313,10 @@ for ((i = 1 ; i <= 30; i++)); do
     ydotool mousemove -x -9999 -y -9999
     syncUp 1
     ydotool mousemove -x "$center_x" -y "$center_y"
+    # NOTE change sync to 1
     syncUp 2
     ydotool click 0xC0
-
+    # NOTE change sync to 1
     syncUp 3
     stopAction "$i"
 
@@ -471,6 +478,7 @@ for ((i = 1 ; i <= 30; i++)); do
     syncUp 2
     stopAction "$i"
 
+    # TODO differs significantly from xdotool
     echo " Move mouse to center of window "
     startAction "$i" "Move mouse to center of window"
     # Get the active window geometry
@@ -488,6 +496,7 @@ for ((i = 1 ; i <= 30; i++)); do
     syncUp 2
     stopAction "$i"
 
+    # TODO SEE ABOVE
     # Select text using highlighter tool
     echo " Toggle highlighter tool and select text to highlight "
     startAction "$i" "Toggle highlighter tool and select text to highlight"
@@ -541,8 +550,6 @@ for ((i = 1 ; i <= 30; i++)); do
     syncUp 1
 
     # Move mouse to center of Okular window, click mouse to exit annotation text box
-    echo " Move mouse to center of window "
-    startAction "$i" "Move mouse to center of window"
     # Get the active window geometry
     WIN_ID=$(kdotool getactivewindow)
     loc="$(kdotool getwindowgeometry "$WIN_ID")"
@@ -557,6 +564,7 @@ for ((i = 1 ; i <= 30; i++)); do
     ydotool mousemove -x "$center_x" -y "$center_y"
     ydotool click 0xC0
 
+    # NOTE change sync to 1
     syncUp 3
     stopAction "$i"
 
@@ -706,6 +714,7 @@ for ((i = 1 ; i <= 30; i++)); do
     # Keypress F6
     ydotool key 64:1 64:0
     syncUp 2
+    stopAction "$i"ß
 
 # REPEAT OVER
 

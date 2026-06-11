@@ -32,10 +32,10 @@ rm ~/.var/app/org.kde.okular/config/okularrc
 rm ~/.var/app/org.kde.okular/config/okularpartrc
 rm -r ~/.var/app/org.kde.okular/cache/*
 
-for ((i = 1; i <= 2; i++)); do
+for ((i = 1; i <= 10; i++)); do
 
     # burn in
-    syncUp 10 #60
+    syncUp 60
 
     # start
     echo "iteration $i;$(date -I) $(date +%T);startTestrun" >> ~/log_idle.csv
@@ -78,7 +78,7 @@ for ((i = 1; i <= 2; i++)); do
     rm -r ~/.var/app/org.kde.okular/cache/*
 
     # cool down
-    syncUp 10 #30
+    syncUp 30
 
     clear
 

@@ -10,6 +10,8 @@ test-build:
   tags:
     - EcoLabWorker
   before_script:
+    # Remove leftover files from previous cancelled/failed runs
+    - sh scripts/cleanup.sh
   # Hardcode the package name to org.kde.kate
     - PACKAGE_NAME="org.kde.kate"
   # Clone the KEcolab repository to access usage scenario files
@@ -31,7 +33,9 @@ test-energy_measurement:
   timeout: 12h
   tags:
     - EcoLabWorker
-  before_script: 
+  before_script:
+  # Remove leftover files from previous cancelled/failed runs
+   - sh scripts/cleanup.sh
   # Copy Usage scenario scripts from test_scripts dir to the LABPC
    - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab scripts/test_scripts/org.kde.kate/* kecolab@$LABPC_IP:/tmp/
   script:
@@ -101,6 +105,9 @@ test-result:
   dependencies:
     # Use Artifacts from Previous stage
     - test-energy_measurement
+  before_script:
+  # Remove leftover files from previous cancelled/failed runs
+  - sh scripts/cleanup.sh
   script:
   - export CURRENT_DATE=$(date +%Y%m%d)
   - gunzip test1.csv-kecolab-$CURRENT_DATE.tab.gz

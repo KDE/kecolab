@@ -10,6 +10,8 @@ build:
   tags:
     - EcoLabWorker
   before_script:
+  # Remove leftover files from previous cancelled/failed runs
+    - sh scripts/cleanup.sh
     - echo $CI_MERGE_REQUEST_TITLE
   script:
   # Flatpak command for installing test application based on merge request title from flathub
@@ -26,7 +28,9 @@ energy_measurement:
   timeout: 12h
   tags:
     - EcoLabWorker
-  before_script: 
+  before_script:
+  # Remove leftover files from previous cancelled/failed runs
+   - sh scripts/cleanup.sh
   # Copy Usage scenario scripts from test_scripts dir to the LABPC
    - scp -o StrictHostKeyChecking=no -r -i  ~/.ssh/kecolab scripts/test_scripts/$CI_MERGE_REQUEST_TITLE/* kecolab@$LABPC_IP:/tmp/
   # Check for configuration script for application under test
@@ -103,6 +107,9 @@ result:
   dependencies:
     # Use Artifacts from Previous stage
     - energy_measurement
+  before_script:
+  # Remove leftover files from previous cancelled/failed runs
+  - sh scripts/cleanup.sh
   script:
   - export CURRENT_DATE=$(date +%Y%m%d)
   - gunzip test1.csv-kecolab-$CURRENT_DATE.tab.gz

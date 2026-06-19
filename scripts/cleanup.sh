@@ -5,7 +5,16 @@
 # Called from before_script of every stage in both pipelines.
 # Safe at any stage: rm -f silently ignores non-existent files.
 
-echo "=== Cleaning up leftover files from previous runs ==="
+echo "=== Cleaning up leftover processes and files from previous runs ==="
+
+# -------------------------------------------------------
+# Runner-local processes (Raspi)
+# -------------------------------------------------------
+
+# Kill any leftover power meter measurement process
+pkill -f check_gude_modified.py || true
+
+echo "Runner process cleanup done."
 
 # -------------------------------------------------------
 # Runner-local files (Raspi)
@@ -34,6 +43,16 @@ echo "Runner cleanup done."
 # -------------------------------------------------------
 
 if [ -f "${HOME}/.ssh/kecolab" ]; then
+  echo "Killing leftover LABPC processes..."
+  # Kill any SUS/measurement scripts still running from a previous cancelled job.
+  # pkill -f matches by full command name so this works for any app's scripts.
+  ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab kecolab@"${LABPC_IP}" '
+    pkill -f log_sus.sh    || true
+    pkill -f log_baseline.sh || true
+    pkill -f log_idle.sh   || true
+    pkill -f collectl       || true' || true
+  echo "LABPC process cleanup done."
+
   echo "Cleaning up LABPC files..."
   ssh -o StrictHostKeyChecking=no -i ~/.ssh/kecolab kecolab@"${LABPC_IP}" \
     'rm -f log_sus.csv log_baseline.csv log_idle.csv \

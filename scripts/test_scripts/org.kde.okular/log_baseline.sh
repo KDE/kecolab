@@ -27,13 +27,17 @@ for ((i = 1; i <= 10; i++)); do
     echo "iteration $i;$(date -I) $(date +%T);startTestrun" >> ~/log_baseline.csv
     echo "start iteration $i"
 
+    syncUp 1
+
     # leave running for time (in seconds)
     # for SUS
-    syncUp 234 #219
+    syncUp 218
 
     # stop iteration
     echo " stop iteration "
     echo "iteration $i;$(date -I) $(date +%T);stopTestrun" >> ~/log_baseline.csv
+
+    syncUp 1
 
     # cool down
     syncUp 30

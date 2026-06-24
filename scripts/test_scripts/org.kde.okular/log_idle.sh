@@ -31,6 +31,7 @@ rm -f ~/log_idle.csv
 rm ~/.var/app/org.kde.okular/config/okularrc
 rm ~/.var/app/org.kde.okular/config/okularpartrc
 rm -r ~/.var/app/org.kde.okular/cache/*
+rm -r ~/.var/app/org.kde.okular/data/okular/docdata/
 
 for ((i = 1; i <= 10; i++)); do
 
@@ -42,28 +43,27 @@ for ((i = 1; i <= 10; i++)); do
     echo "start iteration $i"
 
     # start pause
-    syncUp 5
+    syncUp 1
 
     # open okular
     echo " open okular "
     startAction "$i" "open okular"
     flatpak run org.kde.okular > /dev/null 2>&1 & #Open Okular
-    syncUp 2
+    syncUp 1
     stopAction "$i"
 
     # leave open for time (in seconds)
     # for SUS minus start pause minus wrap-up
-    syncUp 225 #210
+    syncUp 216 #220 - 4s start and wrap-up
 
     # wrap-up
     # quit okular
-    echo " quit okular "
-    startAction "$i" "quit okular"
-    # making sure okular is focused
-    kdotool search --class okular windowactivate
-    # Keypress Ctrl+q
-    ydotool key 29:1 16:1 29:0 16:0
-    syncUp 2
+    echo " Quit Okular "
+    startAction "$i" "Quit Okular"
+    ## Keypress Ctrl+q
+    #ydotool key 29:1 16:1 29:0 16:0
+    flatpak kill org.kde.okular
+    syncUp 1
     stopAction "$i"
 
     # stop iteration
@@ -76,6 +76,7 @@ for ((i = 1; i <= 10; i++)); do
     rm ~/.var/app/org.kde.okular/config/okularrc
     rm ~/.var/app/org.kde.okular/config/okularpartrc
     rm -r ~/.var/app/org.kde.okular/cache/*
+    rm -r ~/.var/app/org.kde.okular/data/okular/docdata/
 
     # cool down
     syncUp 30

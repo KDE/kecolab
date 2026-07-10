@@ -10,11 +10,11 @@ Welcome to the KEcoLab GitLab repository! This project enables you to measure en
    - [Required Formats](#required-formats)
  - [Usage](#usage)
    - [Merge Requests](#merge-requests)
-   - [CI/CD Pipeline](#ci-cd-pipeline)
+   - [CI/CD Pipeline](#ci/cd-pipeline)
    - [Results](#results)
  - [Contribute](#contribute)
    - [KEcoLab Development](#kecoLab-development)
-   - [MRs Without Automated Pipeline](#mrs-without-wutomated-pipeline)
+   - [MRs Without Automated Pipeline](#mrs-without-automated-pipeline)
    - [Communication](#communication)
    
 

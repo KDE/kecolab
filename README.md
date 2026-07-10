@@ -113,6 +113,6 @@ When working on features, fixes, and other changes to KEcoLab, you may need to m
 
 ### Communication
 
-For discussions about KEcoLab, including updates, technical discussions, bug reporting, and general feedback, connect with the team on [Matrix](https://community.kde.org/Matrix): [#kde-eco-dev:kde.org](https://matrix.to/#/#kde-eco-
+For discussions about KEcoLab, including updates, technical discussions, bug reporting, and general feedback, connect with the team on [Matrix](https://community.kde.org/Matrix): [#kde-eco-dev:kde.org](https://matrix.to/#/#kde-eco-dev:kde.org).
 
 For other ways to get involved with KDE Eco: https://eco.kde.org/get-involved/
